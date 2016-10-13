@@ -11,8 +11,14 @@
 
 U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NO_ACK);	// Display which does not send AC
 
+const long interval = 1000;  // interval at which to redraw
+const int splashTime = 4000; // how long to display the splash logo
+
 // Karman_Ghia_Logo_width 128 wide x 58 high
-const uint8_t Karmann_Ghia_Logo[] PROGMEM = {
+#define Karmann_Ghia_Logo_width 128
+#define Karmann_Ghia_Logo_height 58
+const unsigned char Karmann_Ghia_Logo_bits[] PROGMEM = {
+  
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00,
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x60, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -92,22 +98,51 @@ const uint8_t Karmann_Ghia_Logo[] PROGMEM = {
    0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x00, 0x00, 0x00, 0x00 };
 
+int screenMode = 0;
+unsigned long previousMillis = 0;
+
+
+void u8g_prepare(void) {
+  u8g.setFont(u8g_font_6x10);
+  u8g.setFontRefHeightExtendedText();
+  u8g.setDefaultForegroundColor();
+  u8g.setFontPosTop();
+}
+
+void showSplashScreen(void){
+u8g.drawXBMP( 0, 0, Karmann_Ghia_Logo_width, Karmann_Ghia_Logo_height, Karmann_Ghia_Logo_bits);
+}
+
+void showDashboard() {
+  u8g.drawStr( 0, 0, "Dashboard init");
+}
+
+
 void draw(void) {
-  // graphic commands to redraw the complete screen should be placed here  
-  u8g.drawBitmapP( 0, 3, 16, 58, Karmann_Ghia_Logo);
+  u8g_prepare();
+  switch(screenMode) {
+    case 0: showSplashScreen(); break;
+    case 1: showDashboard(); break;
+  }
 }
 
 void setup(void) {
+
 }
 
 void loop(void) {
-  // picture loop
-  u8g.firstPage();  
-  do {
-    draw();
-  } while( u8g.nextPage() );
+  unsigned long currentMillis = millis();
+  if(screenMode == 0 && millis() > splashTime){
+    screenMode++;
+  }
+
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    u8g.firstPage();  
+    do {
+      draw();
+    } while( u8g.nextPage() );
   
-  // rebuild the picture after some delay
-  delay(1000);
+  }
 }
 
