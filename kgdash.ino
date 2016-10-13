@@ -11,9 +11,8 @@
 
 U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NO_ACK);	// Display which does not send AC
 
-#define Karman_Ghia_Logo_width 128
-#define Karman_Ghia_Logo_height 58
-const uint8_t Karman_Ghia_Logo[] PROGMEM = {
+// Karman_Ghia_Logo_width 128 wide x 58 high
+const uint8_t Karmann_Ghia_Logo[] PROGMEM = {
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00,
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x60, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -95,7 +94,7 @@ const uint8_t Karman_Ghia_Logo[] PROGMEM = {
 
 void draw(void) {
   // graphic commands to redraw the complete screen should be placed here  
-  u8g.drawBitmapP( 0, 3, 16, 58, Karman_Ghia_Logo);
+  u8g.drawBitmapP( 0, 3, 16, 58, Karmann_Ghia_Logo);
 }
 
 void setup(void) {
