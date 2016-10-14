@@ -1,6 +1,9 @@
 // Karman_Ghia_Logo_width 128 wide x 58 high
 #define Karmann_Ghia_Logo_width 128
 #define Karmann_Ghia_Logo_height 58
+
+int splashScreenFrame = 0;
+
 const unsigned char Karmann_Ghia_Logo_bits[] PROGMEM = {
   
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x00,
@@ -83,7 +86,41 @@ const unsigned char Karmann_Ghia_Logo_bits[] PROGMEM = {
    0x00, 0x00, 0x00, 0x00 };
 
 
-void showSplashScreen(void){
-  u8g.drawXBMP( 0, 0, Karmann_Ghia_Logo_width, Karmann_Ghia_Logo_height, Karmann_Ghia_Logo_bits);
+void drawSplashScreenFrame(void){
+  if(splashScreenFrame > 9) {
+    u8g.drawXBMP( 1, 3, Karmann_Ghia_Logo_width, Karmann_Ghia_Logo_height, Karmann_Ghia_Logo_bits);
+  }
+  if(splashScreenFrame < 10){
+    u8g.drawBox( 20 - 2 * splashScreenFrame, 20, 80 + 4 * splashScreenFrame, 2);
+  }
+  if(splashScreenFrame > 10 && splashScreenFrame < 20){
+    // draw masks
+    u8g.setColorIndex(0);
+    u8g.drawBox(0,23,128, 100 - splashScreenFrame * 2);
+    u8g.setColorIndex(1);
+  }
 }
 
+void splashScreenController(void){
+  u8g.firstPage();  
+  do {
+    drawSplashScreenFrame();
+  } while( u8g.nextPage() );
+}
+
+void drawSplashScreen(void){
+    
+  do {
+    splashScreenController();
+    splashScreenFrame ++;
+  } while( splashScreenFrame < 60);
+
+  delay(splashTime - 500);
+  
+  do {
+    splashScreenController();
+    splashScreenFrame ++;
+  } while( splashScreenFrame < 100);
+
+  delay(500);
+}
