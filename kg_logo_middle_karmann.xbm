@@ -1,0 +1,7 @@
+#define kg_logo_middle_karmann_width 11
+#define kg_logo_middle_karmann_height 8
+#define kg_logo_middle_karmann_x_offset 49
+#define kg_logo_middle_karmann_y_offset 11
+static unsigned char kg_logo_middle_karmann_bits[] = {
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x04, 0x00, 0x06,
+   0xff, 0x07, 0xff, 0x03 };
