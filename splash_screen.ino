@@ -142,15 +142,15 @@ void drawSplashScreen(void){
   do {
     splashScreenController();
     splashScreenFrame ++;
-  } while( splashScreenFrame < 60);
+  } while( splashScreenFrame < 20);
 
   // pause on full logo
-  delay(500);
+  delay(1000);
 
-  // tear down animation
-  do {
-    splashScreenController();
-    splashScreenFrame ++;
-  } while( splashScreenFrame < 100);
+  // tear down animation?
+  // do {
+  //   splashScreenController();
+  //   splashScreenFrame ++;
+  // } while( splashScreenFrame < 100);
 
 }
