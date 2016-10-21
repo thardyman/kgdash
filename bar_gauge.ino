@@ -6,16 +6,16 @@ void bar_gauge(int offsetX, int offsetY, int barCount, int flip, float inputVal)
   int i = 0;
   int barHeight = 6;
   int barBottomMargin = 3;
-  int barWidth[] = {14, 12, 10, 9, 8, 8, 7 };
+  int barWidth[] = {16, 14, 12, 11, 10, 10, 9 };
   int barRadius = 2;
-  int barOffsetX = offsetX;
+  int barOffsetX = offsetX - 1;
   float threshold[] = {0.84, 0.7, 0.56, 0.42, 0.28, 0.14};
   do{
     if(flip){
-      barOffsetX = offsetX - barWidth[i];
+      barOffsetX = offsetX - barWidth[i] + 1;
     }
     if(inputVal < threshold[i]){
-      u8g.drawRFrame(barOffsetX, offsetY + i * (barHeight + barBottomMargin), barWidth[i], barHeight, barRadius);
+      u8g.drawFrame(barOffsetX, offsetY + i * (barHeight + barBottomMargin), barWidth[i], barHeight);
     }
     else {
       // drawRbox doesn't seem to work correctly, so we'll use a square box :(

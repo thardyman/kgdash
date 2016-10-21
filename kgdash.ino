@@ -5,8 +5,39 @@
 
  Author: Tim Hardyman
 
- Power sensor / regulator...
+ Power sensor / regulator circuit idea...
  http://forum.arduino.cc/index.php?topic=121654.0
+
+ N.b. I think I'll use a simplified version where the input is analog 
+ and used for the volt meter
+
+ // TODO:
+
+ - Add GPS
+ - Calculate odometer reading
+ - Display odometer
+ - Read / write odometer to EEPROM
+ - debug mode, to show raw data
+ - Display coolant in gauge
+ - Calibrate coolant gauge
+ - Calibrate fuel gauge
+ - Display battery voltage
+ 
+// Ideas:
+ - Sense power cut and write to EEPROM
+ - Add power supply control for GPS & Screen
+ - Cut power to GPS / screen during power down to give more time for EEPROM write 
+ - display clock
+ - adjust UTC to BST if necessary
+ - display odometer reading on start up
+ - make gauge display an object - to support memory / change animation etc
+ - Add multiple dashboard layouts, switchable by button?
+ - Add trip meter with reset option
+ - Sense refuelling, and monitior miles since last refuel
+ - Low tank warning light
+ - High coolant temp warning light
+ - monitor internal and external temperatures
+
 */
 
 
