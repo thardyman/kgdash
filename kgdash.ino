@@ -78,18 +78,18 @@ void draw(void) {
 
 
 void setup(void) {
-
+  odometer_setup();
 }
 
 void readSensors(){
   // on each display cycle read all the sensors
   readTemperature();  
   readFuel();
+  odometer_loop();
 }
 
 void loop(void) {
   unsigned long currentMillis = millis();
-
   if(screenMode == 0){
     drawSplashScreen();
     screenMode = 1;
