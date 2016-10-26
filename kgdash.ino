@@ -13,10 +13,6 @@
 
  // TODO:
 
- - Add GPS
- - Calculate odometer reading
- - Display odometer
- - Read / write odometer to EEPROM
  - debug mode, to show raw data
  - Display coolant in gauge
  - Calibrate coolant gauge
@@ -85,11 +81,12 @@ void readSensors(){
   // on each display cycle read all the sensors
   readTemperature();  
   readFuel();
-  odometer_loop();
+  readOdometer();
 }
 
 void loop(void) {
   unsigned long currentMillis = millis();
+  odometer_loop();
   if(screenMode == 0){
     drawSplashScreen();
     screenMode = 1;

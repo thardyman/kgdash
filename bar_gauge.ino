@@ -15,7 +15,7 @@ void bar_gauge(int offsetX, int offsetY, int barCount, int flip, float inputVal)
       barOffsetX = offsetX - barWidth[i];
     }
     if(inputVal < threshold[i]){
-      u8g.drawLine(offsetX, offsetY + i * (barHeight + barBottomMargin), offsetX , offsetY + i * (barHeight + barBottomMargin) + barHeight);
+      u8g.drawLine(offsetX, offsetY + i * (barHeight + barBottomMargin), offsetX , offsetY + barHeight + i * (barHeight + barBottomMargin));
     }
     else {
       // drawRbox doesn't seem to work correctly, so we'll use a square box :(
