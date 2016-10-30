@@ -40,6 +40,7 @@ void odometer_draw() {
 void odometer_setup() {
   ss.begin(9600);
   EEPROM.get(eepromAddress, storedOdometer);
+  odometer = storedOdometer;
 }
 
 void odometer_loop() {
