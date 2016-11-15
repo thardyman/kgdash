@@ -1,38 +1,38 @@
 /*
 
- Karmann Ghia Dashboard
- v0.0.0
+  Karmann Ghia Dashboard
+  v0.0.0
 
- Author: Tim Hardyman
+  Author: Tim Hardyman
 
- Power sensor / regulator circuit idea...
- http://forum.arduino.cc/index.php?topic=121654.0
+  Power sensor / regulator circuit idea...
+  http://forum.arduino.cc/index.php?topic=121654.0
 
- N.b. I think I'll use a simplified version where the input is analog 
- and used for the volt meter
+  N.b. I think I'll use a simplified version where the input is analog
+  and used for the volt meter
 
- // TODO:
+  // TODO:
 
- - debug mode, to show raw data
- - Display coolant in gauge
- - Calibrate coolant gauge
- - Calibrate fuel gauge
- - Display battery voltage
- 
-// Ideas:
- - Sense power cut and write to EEPROM
- - Add power supply control for GPS & Screen
- - Cut power to GPS / screen during power down to give more time for EEPROM write 
- - display clock
- - adjust UTC to BST if necessary
- - display odometer reading on start up
- - make gauge display an object - to support memory / change animation etc
- - Add multiple dashboard layouts, switchable by button?
- - Add trip meter with reset option
- - Sense refuelling, and monitior miles since last refuel
- - Low tank warning light
- - High coolant temp warning light
- - monitor internal and external temperatures
+  - debug mode, to show raw data
+  - Display coolant in gauge
+  - Calibrate coolant gauge
+  - Calibrate fuel gauge
+  - Display battery voltage
+
+  // Ideas:
+  - Sense power cut and write to EEPROM
+  - Add power supply control for GPS & Screen
+  - Cut power to GPS / screen during power down to give more time for EEPROM write
+  - display clock
+  - adjust UTC to BST if necessary
+  - display odometer reading on start up
+  - make gauge display an object - to support memory / change animation etc
+  - Add multiple dashboard layouts, switchable by button?
+  - Add trip meter with reset option
+  - Sense refuelling, and monitior miles since last refuel
+  - Low tank warning light
+  - High coolant temp warning light
+  - monitor internal and external temperatures
 
 */
 
@@ -49,12 +49,15 @@ int screenMode = 0;
 unsigned long previousMillis = 0;
 float temperature;
 float fuel;
+float voltage;
 
 int tempPin = 0;    // analog input pin for temperature
 int coolantPin = 1; // analog input pin for coolant temperature
 int fuelPin = 2;    // analog input pin for fuel level
 int voltagePin = 3; // analog input pin for voltage
 
+int gpsPower = 2; // digital output pin to control power to GPS
+int displayPower = 3; // digital output pin to control power to display
 
 
 void u8g_prepare(void) {
@@ -67,7 +70,7 @@ void u8g_prepare(void) {
 
 void draw(void) {
   u8g_prepare();
-  switch(screenMode) {
+  switch (screenMode) {
     case 1: dashboard_1_drawloop(); break;
   }
 }
@@ -75,11 +78,15 @@ void draw(void) {
 
 void setup(void) {
   odometer_setup();
+  pinMode(accessoriesPower, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(gpsPower, HIGH);
+  digitalWrite(displayPower, HIGH);
 }
 
-void readSensors(){
+void readSensors() {
   // on each display cycle read all the sensors
-  readTemperature();  
+  readTemperature();
   readFuel();
   readOdometer();
 }
@@ -87,7 +94,8 @@ void readSensors(){
 void loop(void) {
   unsigned long currentMillis = millis();
   odometer_loop();
-  if(screenMode == 0){
+  battery_loop();
+  if (screenMode == 0) {
     drawSplashScreen();
     screenMode = 1;
     dashboard_1_init();
@@ -95,14 +103,14 @@ void loop(void) {
     if (currentMillis - previousMillis >= interval) {
       previousMillis = currentMillis;
       readSensors();
-      switch(screenMode) {
+      switch (screenMode) {
         case 1: dashboard_1_progloop(); break;
       }
-      
-      u8g.firstPage();  
+
+      u8g.firstPage();
       do {
         draw();
-      } while( u8g.nextPage() );
+      } while ( u8g.nextPage() );
     }
   }
 }

@@ -19,10 +19,6 @@ void odometer_draw() {
   float miles = odometer / 1609.34;
   int size = 1000000;
 
-
-  u8g.setPrintPos(20, 32);
-  u8g.print("lat: ");
-  u8g.print(lastPositionLat);
   u8g.setPrintPos(20, 41);
   u8g.print("lng: ");
   u8g.print(lastPositionLong);
@@ -40,6 +36,9 @@ void odometer_draw() {
 void odometer_setup() {
   ss.begin(9600);
   EEPROM.get(eepromAddress, storedOdometer);
+  if(storedOdometer != storedOdometer){ // check for NaN
+    storedOdometer = 0;    
+  }
   odometer = storedOdometer;
 }
 
@@ -72,8 +71,11 @@ void readOdometer(){
   }
 
   if(odometer - storedOdometer > eepromThreshold){
-    EEPROM.put(eepromAddress, odometer);
-    storedOdometer = odometer;
+    odometerStore();  
   }
-  
+}
+
+void odometerStore(){
+  EEPROM.put(eepromAddress, odometer);
+  storedOdometer = odometer;
 }

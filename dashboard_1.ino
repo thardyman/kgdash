@@ -36,5 +36,8 @@ void dashboard_1_drawloop() {
   bar_gauge(128, 2, 7, 1, temperature / 40);  // really this should be coolant!
   u8g.setPrintPos(20, 20);
   u8g.print("Temp: "); u8g.print(temperature); u8g.print(" *c");
+  u8g.setPrintPos(20, 32);
+  u8g.print(voltage);
+  u8g.print("v");
   odometer_draw();
 }
