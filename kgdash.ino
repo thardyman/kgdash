@@ -17,7 +17,6 @@
   - Display coolant in gauge
   - Calibrate coolant gauge
   - Calibrate fuel gauge
-  - Display battery voltage
 
   // Ideas:
   - Sense power cut and write to EEPROM
@@ -50,14 +49,21 @@ unsigned long previousMillis = 0;
 float temperature;
 float fuel;
 float voltage;
+int isPowerCut = false;
 
-int tempPin = 0;    // analog input pin for temperature
-int coolantPin = 1; // analog input pin for coolant temperature
-int fuelPin = 2;    // analog input pin for fuel level
-int voltagePin = 3; // analog input pin for voltage
+// Analog input pins
+int tempPin = 0;    // temperature
+int coolantPin = 1; // coolant temperature
+int fuelPin = 2;    // fuel level
+int voltagePin = 3; // voltage
 
-int gpsPower = 2; // digital output pin to control power to GPS
-int displayPower = 3; // digital output pin to control power to display
+
+// digital output pins
+int gpsPower = 5;  // GPS power
+int displayPower = 6; // power to display
+
+// digital input pins
+int powerMonitor = 2;
 
 
 void u8g_prepare(void) {
@@ -77,11 +83,14 @@ void draw(void) {
 
 
 void setup(void) {
-  odometer_setup();
-  pinMode(accessoriesPower, OUTPUT);
+  pinMode(gpsPower, OUTPUT);
+  pinMode(displayPower, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(powerMonitor, INPUT_PULLUP);
   digitalWrite(gpsPower, HIGH);
   digitalWrite(displayPower, HIGH);
+  odometer_setup();
+  attachInterrupt(digitalPinToInterrupt(powerMonitor), power_cut, RISING);
 }
 
 void readSensors() {

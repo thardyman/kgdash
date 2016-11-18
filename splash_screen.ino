@@ -93,12 +93,12 @@ const unsigned char kg_logo_bottom_bits[] PROGMEM = {
 
 
 void drawSplashScreenFrame(int offset_x, int offset_y){
-  if(splashScreenFrame >= 10 && splashScreenFrame <= 17) {
+  if(splashScreenFrame >= 10 && splashScreenFrame <= 22) {
     
     // draw KARMANN bitmap (no Ghia) - 8px high
     // rising out of baseline
 
-    int yPos = kg_logo_left_y_offset + 17 - splashScreenFrame + offset_y;
+    int yPos = max(kg_logo_left_y_offset + 17 - splashScreenFrame + offset_y, kg_logo_left_y_offset + offset_y);
     // karmann script rising from baseline
     u8g.drawXBMP( kg_logo_left_x_offset + offset_x, yPos, kg_logo_left_width, kg_logo_left_height, kg_logo_left_bits);
     u8g.drawXBMP( kg_logo_middle_unmerged_x_offset + offset_x, yPos, kg_logo_middle_unmerged_width, kg_logo_middle_unmerged_height, kg_logo_middle_unmerged_bits);
@@ -117,7 +117,7 @@ void drawSplashScreenFrame(int offset_x, int offset_y){
     u8g.setColorIndex(1);
   }
   
-  if(splashScreenFrame > 17){
+  if(splashScreenFrame > 22){
     // draw full logo
     
     u8g.drawXBMP( kg_logo_top_x_offset + offset_x, kg_logo_top_y_offset + offset_y, kg_logo_top_width, kg_logo_top_height, kg_logo_top_bits);
@@ -142,7 +142,7 @@ void drawSplashScreen(void){
   do {
     splashScreenController();
     splashScreenFrame ++;
-  } while( splashScreenFrame < 20);
+  } while( splashScreenFrame < 26);
 
   // pause on full logo
   delay(1000);
