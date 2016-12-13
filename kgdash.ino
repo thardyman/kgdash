@@ -22,7 +22,6 @@
   - Sense power cut and write to EEPROM
   - Add power supply control for GPS & Screen
   - Cut power to GPS / screen during power down to give more time for EEPROM write
-  - display clock
   - adjust UTC to BST if necessary
   - display odometer reading on start up
   - make gauge display an object - to support memory / change animation etc
@@ -65,6 +64,8 @@ int displayPower = 6; // power to display
 // digital input pins
 int powerMonitor = 2;
 
+String lastFixTime = "--:--";
+
 
 void u8g_prepare(void) {
   u8g.setFont(u8g_font_6x10);
@@ -89,8 +90,10 @@ void setup(void) {
   pinMode(powerMonitor, INPUT_PULLUP);
   digitalWrite(gpsPower, HIGH);
   digitalWrite(displayPower, HIGH);
-  odometer_setup();
   attachInterrupt(digitalPinToInterrupt(powerMonitor), power_cut, RISING);
+  delay(10); // ensure power has time to get to display
+  odometer_setup();
+
 }
 
 void readSensors() {

@@ -19,9 +19,6 @@ void odometer_draw() {
   float miles = odometer / 1609.34;
   int size = 1000000;
 
-  u8g.setPrintPos(20, 41);
-  u8g.print("lng: ");
-  u8g.print(lastPositionLong);
 
   u8g.setFont(u8g_font_9x18);
 
@@ -51,10 +48,19 @@ void odometer_loop() {
 void readOdometer(){
   float distanceTravelled, flat, flong;
   unsigned long age;
-  
+
+  int year;
+  byte month, day, hour, minutes, second, hundredths;
+ 
   gps.f_get_position(&flat, &flong, &age);
 
   if (flat != TinyGPS::GPS_INVALID_F_ANGLE && flong != TinyGPS::GPS_INVALID_F_ANGLE){
+
+   gps.crack_datetime(&year, &month, &day,
+    &hour, &minutes, &second, &hundredths, &age);
+
+   lastFixTime = String(hour) + ":" + String(minutes);
+    
     if(lastPositionLat == TinyGPS::GPS_INVALID_F_ANGLE){
       // first fix
       lastPositionLat = flat;
