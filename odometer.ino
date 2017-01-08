@@ -15,10 +15,27 @@ float storedOdometer = 0;
 const long recordingThreshold = 20; // metres
 const long eepromThreshold = 500; // metres
 
+char rawGPS;
+unsigned long gpsStatsChars;
+unsigned short gpsStatsSentances, gpsStatsFailedChecksum;
+
+
 void odometer_draw() {
   float miles = odometer / 1609.34;
   int size = 1000000;
 
+  u8g.setPrintPos(90, 0);
+  u8g.print(rawGPS);
+
+  u8g.setPrintPos(20, 10);
+  u8g.print("CH:");
+  u8g.print(gpsStatsChars);  
+  u8g.print(" S:");  
+  u8g.print(gpsStatsSentances);  
+  u8g.print(" F:");  
+  u8g.print(gpsStatsFailedChecksum);  
+//  u8g.print("Lat: ");
+//  u8g.print(lastPositionLat);
 
   u8g.setFont(u8g_font_9x18);
 
@@ -41,7 +58,8 @@ void odometer_setup() {
 
 void odometer_loop() {
   while (ss.available()){
-    gps.encode(ss.read());
+    rawGPS = ss.read();
+    gps.encode(rawGPS);
   }
 }
 
@@ -53,7 +71,8 @@ void readOdometer(){
   byte month, day, hour, minutes, second, hundredths;
  
   gps.f_get_position(&flat, &flong, &age);
-
+  gps.stats(&gpsStatsChars, &gpsStatsSentances, &gpsStatsFailedChecksum);
+  
   if (flat != TinyGPS::GPS_INVALID_F_ANGLE && flong != TinyGPS::GPS_INVALID_F_ANGLE){
 
    gps.crack_datetime(&year, &month, &day,

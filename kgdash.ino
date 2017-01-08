@@ -46,7 +46,8 @@ const int splashTime = 0; // how long to display the splash logo
 int screenMode = 0;
 unsigned long previousMillis = 0;
 float temperature;
-float fuel;
+int fuel;
+int coolant;
 float voltage;
 int isPowerCut = false;
 
